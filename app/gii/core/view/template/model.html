@@ -1,0 +1,75 @@
+<?php
+use Li\Model;
+/**
+ * This is the model class for table "{$table}".
+ *
+ * The followings are the available columns in table '{$table}':
+{foreach $columns as $column}
+ * @property {$column.dataType} ${$column.Field}
+{/foreach}
+ */
+class {$model} extends Model
+{
+
+    public $pk = {$pk};
+    public $tableName = '{$table}';
+
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+
+    public function getTabelName()
+    {
+        return '{$table}';
+    }
+
+    public function alias()
+    {
+        return array(
+{foreach $columns as $column}
+            '{$column.Field}'=>'{if $column.Comment!=''}{$column.Comment}{else}{$column.Field}{/if}',
+{/foreach}
+        );
+    }
+
+    public function rules()
+    {
+        return array(
+            'default'=>array(
+{foreach $columns as $column}
+{if !empty($column['validate'])}
+                '{$column.Field}'=>array(
+{foreach $column['validate'] as $v}
+{if $v[0] == 'maxlength'}
+                    array('{$v[0]}','{$v[1]}','{$v[2]}'),
+{elseif $v[0] == 'date'}
+                    array('{$v[0]}','{$v[1]}','{$v[2]}'),
+{else}
+                    array('{$v[0]}','{$v[1]}'),
+{/if}
+{/foreach}
+                ),
+{/if}
+{/foreach}
+            ),
+        );
+    }
+
+
+    public function search($criteria)
+    {
+{foreach $columns as $column}
+        $this->filter('{$column.Field}');
+{/foreach}
+
+        $criteriaCount = $this->getCriteria();
+        $data = $this->findAll($criteria);
+        return array(
+            $data,
+            $criteriaCount,
+        );
+    }
+}
+
+?>

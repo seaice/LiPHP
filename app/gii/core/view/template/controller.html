@@ -1,0 +1,102 @@
+<?php
+use Li\Controller;
+use Li\GridView;
+use Li\Validate;
+
+class {$controller}Controller extends Controller
+{
+    public function adminAction()
+    {
+        $model = {$controller}::model();
+
+        $gridview = GridView::init($this, $model, 
+            array(
+                'columns'=>
+                    array(
+{foreach $columns as $col}
+                        array(
+                            'name'=>'{$col.Field}',
+                            'filter'=>true,
+                        ),
+{/foreach}
+                        array(
+                            'alias'=>'操作',
+                            'buttons'=>array(
+                                array(
+                                    'name'=>'编辑',
+                                    'action'=>'update',
+                                ),
+                                array(
+                                    'name'=>'删除',
+                                    'action'=>'delete',
+                                ),
+                            )
+                        ),
+                ),
+            )
+        );
+
+        $this->assign('gridview',$gridview);
+        $this->display();
+    }
+
+    public function updateAction()
+    {
+        $id = $_GET['id'];
+        $model = {$controller}::model();
+
+        if(IS_POST)
+        {
+            if(empty($model->validate($_POST['data'])))
+            {
+                if($model->updateByPk($id, $_POST['data']) > 0)
+                {
+                    $this->assign('message','success');
+                }
+            }
+        }
+        $data = $model->findByPk($id);
+        $this->assign('data',$data);
+        $this->display();
+    }
+
+    public function deleteAction()
+    {
+        $id=$_GET['id'];
+        if(IS_AJAX)
+        {
+            if({$controller}::model()->deleteByPk($id))
+            {
+                $this->outputJSON(true);
+            }
+        }
+
+        $this->outputJSON(false);
+    }
+
+    public function createAction()
+    {
+        $model = {$controller}::model();
+
+        if(IS_POST)
+        {
+            $model->data = $_POST['data'];
+            if(empty($model->validate($_POST['data'])))
+            {
+                if($model->save($_POST['data']))
+                {
+                    $this->assign('message','success');
+                    $id = $model->getLastId();
+                }
+
+                $model->findByPk($id);
+            }
+        }
+
+        $this->assign('model',$model);
+        $this->display();
+    }
+}
+
+?>
+

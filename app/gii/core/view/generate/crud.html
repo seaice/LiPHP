@@ -1,0 +1,144 @@
+    <script src="{url()}/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{url()}/assets/js/colorbox/jquery.colorbox-min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{url()}/assets/js/colorbox/colorbox.css" />
+
+    <div class="frame-body">
+        <ol class="breadcrumb">
+            <li><a href="">Home</a></li>
+            <li>Generate</li>
+            <li>crud</li>
+        </ol>
+        <form class="form-horizontal" method="POST">
+        <div class="panel panel-default">
+            <div class="panel-heading">Option</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Project</label>
+                    <div class="col-sm-4">
+                        <select name="project" class="form-control">
+                        {foreach $project as $value}
+                            <option {if $smarty.post.project==$value}selected{/if} value="{$value}">{$value}</option>
+                        {/foreach}
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="help-block">This is just a supporting text</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Env</label>
+                    <div class="col-sm-4">
+                        <input name="env" class="form-control" placeholder="env" value="{$smarty.post.env}">
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="help-block">This is just a supporting text</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Db</label>
+                    <div class="col-sm-4">
+                        <input name="db" class="form-control" placeholder="db" value="{$smarty.post.db}">
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="help-block">This is just a supporting text</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Table</label>
+                    <div class="col-sm-4">
+                        <input name="table" class="form-control" placeholder="table" value="{$smarty.post.table}">
+                    </div>
+                    <div class="col-sm-4">
+                        <span class="help-block">This is just a supporting text</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" name="preview" value="preview" class="btn btn-default btn-preview">Preview</button>
+                        <button type="submit" name="generate" value="generate" class="btn btn-default">Generate</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="panel panel-default hidden panel-code">
+            <div class="panel-heading">Code</div>
+            <div class="panel-body">
+                <table class="table table-hover table-nomargin table-bordered">
+                    <thead>
+                        <tr class='thefilter'>
+                            <th>Code File</th>
+                            <th>Generate</th>
+                        </tr>
+                    </thead>
+                    <tbody class="code-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </form>
+        {if $flagGenerate}
+        <div class="alert alert-success" role="alert">
+            The code has been generated successfully.
+        </div>
+        {/if}
+        <script type="text/javascript">
+
+        $(function(){
+            $(".column-validate-rule").on('change', function(){
+                $(this).parent().siblings('.col-sm-2').find('.rule-1').addClass('hidden');
+                $(this).parent().siblings('.col-sm-2').find('.rule-2').addClass('hidden');
+                var rule = $(this).val();
+                if(rule == 'remote'
+                    || rule == 'equalTo'
+                    || rule == 'accept'
+                    || rule == 'maxlength'
+                    || rule == 'minlength'
+                    || rule == 'max'
+                    || rule == 'min'
+                )
+                {
+                    $(this).parent().siblings('.col-sm-2').find('.rule-1').removeClass('hidden');
+                }
+                if(rule == 'range'
+                    || rule == 'rangelength'
+                )
+                {
+                    $(this).parent().siblings('.col-sm-2').find('.rule-1').removeClass('hidden');
+                    $(this).parent().siblings('.col-sm-2').find('.rule-2').removeClass('hidden');
+                }
+            });
+
+            $(".btn-validate-add").bind('click', function(){
+                $(".validate-father").clone().insertAfter(".validate-father").removeClass("hidden").removeClass("validate-father");
+            });
+
+            $(".btn-preview").on('click', function(){
+                var project = $('select[name="project"]').val();
+                var env = $('input[name="env"]').val();
+                var db = $('input[name="db"]').val();
+                var table = $('input[name="table"]').val();
+                $(".alert-success").hide();
+                
+                {literal}
+                $.post('previewCrud', 
+                    {project:project,env:env,db:db,table:table},
+                    function(data){
+                        $(".code-tbody").empty();
+                        $('.panel-code').removeClass('hidden');
+                        $(".code-tbody").append(data);
+
+                });
+                {/literal}
+            });
+
+            {literal}
+            $(document).on('click','.codeview',function(e){
+                e.preventDefault();
+                $.colorbox({iframe:true, href:$(this).attr('href'),width:"80%", height:"80%"});
+            });
+            {/literal}
+
+        });
+        </script>
+    </div>

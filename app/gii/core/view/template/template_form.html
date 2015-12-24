@@ -1,0 +1,56 @@
+{literal}{if $smarty.get.from}{/literal}
+<a type="button" class="btn btn-default btn-sm mb10" href="{literal}{urldecode($smarty.get.from)}{/literal}">
+    <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> 返回
+</a>
+{literal}{/if}{/literal}
+
+{literal}
+{if isset($message)}
+<div class="alert alert-success" role="alert">{$message}</div>
+{/if}
+{/literal}
+
+<form class="form-horizontal" method="POST">
+{foreach $columns as $col}
+{if $col.dataType == 'integer' && $col.Extra != 'auto_increment'}
+    <div class="form-group">
+        <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
+        <div class="col-sm-10">
+            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}">
+        </div>
+    </div>
+{elseif $col.Type == 'text' || $col.Type == 'mediumtext' || $col.Type == 'longtext'}
+    <div class="form-group">
+        <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
+        <div class="col-sm-10">
+            <textarea name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}">{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}</textarea>
+        </div>
+    </div>
+{elseif $col.dataType == 'string'}
+    <div class="form-group">
+        <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
+        <div class="col-sm-10">
+            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}">
+        </div>
+    </div>
+{/if}
+{/foreach}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">保存</button>
+        </div>
+    </div>
+</form>
+{literal}
+<script type="text/javascript">
+$(function(){
+    {$model->getValidate()}
+    {$model->getError()}
+    $.validator.addMethod("date", 
+        function(value,element,params) {
+            return moment(value, params, true).isValid();
+        }
+    );
+});
+</script>
+{/literal}

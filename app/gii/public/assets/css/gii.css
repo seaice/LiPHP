@@ -1,0 +1,27 @@
+
+.bg-new {background: #C5FBBD;}
+.bg-overwrite {background: #FFE0E1;}
+.bg-skip {background: #eee;}
+
+
+.diff-content
+{
+    background: #F0F4FF;
+    text-align: left;
+}
+
+.diff-content pre.diff
+{
+    margin:0;
+}
+
+.diff-content pre.diff del
+{
+    background: pink;
+}
+
+.diff-content pre.diff ins
+{
+    background: lightgreen;
+    text-decoration: none;
+}

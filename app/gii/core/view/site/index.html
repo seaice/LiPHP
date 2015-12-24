@@ -1,0 +1,84 @@
+
+    <div id="navigation" class="clearfix">
+        <div class="container-fluid">
+            <div style="width: 185px; height: 40px;" class="pull-left">
+            <a href="#" id="brand">FLAT</a>
+            <a href="#" class="toggle-nav" rel="tooltip" data-placement="bottom" title="Toggle navigation"><i class="icon-reorder"></i></a>
+            </div>
+            <ul class='main-nav'>
+            
+            </ul>
+            <div class="user">
+                <div class="dropdown">
+                    <a href="#" class='dropdown-toggle' data-toggle="dropdown">John Doe <img src="img/demo/user-avatar.jpg" alt=""></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a href="more-userprofile.html">Edit profile</a>
+                        </li>
+                        <li>
+                            <a href="#">Account settings</a>
+                        </li>
+                        <li>
+                            <a href="more-login.html">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="frame_left">
+        <div class="nav-side-menu">
+            <div class="menu-list" >
+                <ul id="menu-content" class="menu-content collapse out">
+<!--                     <li>
+                        <a href="/index/dashboard" target="main_frame">
+                            仪表盘
+                        </a>
+                    </li> -->
+                    {foreach $menu as $key => $value}
+                    {if is_array($value)}
+                    <li data-toggle="collapse" data-target="#menu_{$value@index}" class="collapsed">
+                        <a href="javascript:;">{$key}<span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="menu_{$value@index}">
+                        {foreach $value as $key_sub => $value_sub}
+                        <li><a href="{$value_sub}" target="main_frame">{$key_sub}</a></li>
+                        {/foreach}
+                    </ul>
+                    {else}
+                    <li data-toggle="collapse" data-target="#menu_{$value@index}" class="collapsed">
+                        <a href="{$value}" target="main_frame">{$key}<span class="arrow"></span></a>
+                    </li>
+                    {/if}
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="frame_right" class="frame_right">
+        <div id="inner" class="inner">
+            <iframe name="main_frame" id="main_frame" src="{url('site/dashboard')}" style=" height: 400px; width: 800px;" frameborder="0"></iframe>
+        </div>
+    </div>
+    <script>
+    function init() {
+        var height = $(this).height();
+        var width = $(this).width();
+        var header_height = 40;
+        $(".frame_left").height(height - header_height);
+        $("#inner").width(width - 200).height(height - header_height - 5);
+        $("#main_frame").width(width - 200).height(height - header_height- 5);
+    }
+    $(window).resize(function() {
+        init();
+    });
+
+    init();
+    $(document).ready(function() {
+        $(".nav-side-menu li").on('click', function() {
+            $(".nav-side-menu li").removeClass('active');
+            $(this).addClass('active');
+
+        });
+    });
+    </script>

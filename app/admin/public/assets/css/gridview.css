@@ -1,0 +1,51 @@
+.gridview-filter td {
+    padding: 4px 8px !important;
+}
+/*
+.gridview-filter input {
+    height: auto;
+    padding: 4px 10px;
+
+}
+.gridview-filter select {
+    height: auto;
+    padding: 4px 10px;
+}
+*/
+.gridview-filter input[type=checkbox],
+.gridview-filter input[type=radio] {
+    margin: 9px 0 0;
+    margin-top: 1px\9;
+    line-height: normal;
+}
+
+.gridview-filter input,
+.gridview-filter select
+{
+    display: block;
+    width: 100%;
+    /*height: 34px;*/
+    padding: 4px 10px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.gridview-update, .gridview-delete
+{
+    font-size:12px;
+}
+
+.gridview-search, .gridview-reset {
+    font-size: 12px;
+    line-height: 30px;
+}

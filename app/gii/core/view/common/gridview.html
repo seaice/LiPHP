@@ -1,0 +1,80 @@
+<div class="grid-view">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th width="30"><input type="checkbox"></th>
+                {foreach $gridview->columns as $column}
+                <th>{$column.alias}</th>
+                {/foreach}
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="gridview-filter">
+            <form id="gridview-filter">
+                <td><input type="checkbox"></td>
+                {foreach $gridview->columns as $col}
+                    {if $col.filter !== false}
+                        {if is_array($col.filter)}
+                <td>
+                    <select name="{$col.name}" {$col.htmlOptions}>
+                        <option value="">请选择</option>
+                    {foreach $col.filter as $key => $value}
+                        <option {if $smarty.get[$col.name]==$value}selected="selected"{/if} value="{$value}">{$key}</option>
+                    {/foreach}
+                    </select>
+                </td>
+                        {else}
+                <td><input name="{$col.name}" type="text" {$col.htmlOptions} value="{$smarty.get[$col.name]}" /></td>
+                        {/if}
+                    {elseif !isset($col.buttons)}
+                <td>&nbsp;</td>
+                    {/if}
+                {/foreach}
+                <td><a class="btn btn-success btn-sm gridview-search" href="">搜索</a>&nbsp;&nbsp;<a class="btn btn-default btn-sm gridview-reset" href="{$gridview->reset}">重置</a></td>
+            </form>
+            </tr>
+            {foreach $gridview->data as $value}
+            <tr>
+                <td><input type="checkbox"></td>
+                {foreach $gridview->columns as $column}
+                    {if isset($column['buttons'])}
+                    <td>
+                        {$value[$column['html']]}
+                    </td>
+                    {else}
+                    <td>{$value[$column['name']]}</td>
+                    {/if}
+                {/foreach}
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    {include file='Common/pagination.html' pagination=$gridview->pagination}
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $(".gridview-delete").on('click',function(){
+        if(confirm("确认删除？"))
+        {
+            var url = $(this).attr('href');
+            $.getJSON(url,function(data){
+                location.reload(); 
+            });
+        }
+        return false;
+    });
+
+    $('.gridview-datepicker').datepicker({
+        'format':'yyyy-mm-dd',
+        'language':'zh-CN'
+    });
+
+    window.search_flag=0;
+    $(".gridview-search").on('click',function(){
+        var form=$('#gridview-filter').serialize();
+        location.href = '?'+form;
+        return false;
+    });
+});
+</script>

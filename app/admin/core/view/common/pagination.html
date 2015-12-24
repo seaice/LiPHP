@@ -1,0 +1,17 @@
+<nav class="pull-right">
+    <ul class="pagination">
+        <li>
+            <a href="?{$pagination->pageVar}={$pagination->prePage}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {for $page=1 to $pagination->pageCount}
+        <li{if $page==$pagination->currentPage} class="active"{/if}><a href="{$pagination->preHref}{$pagination->pageVar}={$page}">{$page}</a></li>
+        {/for}
+        <li>
+            <a href="?{$pagination->pageVar}={$pagination->nextPage}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

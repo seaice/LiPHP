@@ -1,0 +1,14 @@
+{foreach $files as $file}
+<tr class="{if $file.exist && $file.diff}bg-overwrite{elseif !$file.diff}bg-skip{else}bg-new{/if}">
+    <td><a class="codeview" href="{$file.url}">{$file.file}{if $file.exist && $file.diff}</a><a class="codeview" href="{$file.url}/diff/1">(diff)</a>{/if}</td>
+    <td>
+    {if $file.exist && $file.diff}
+        overwrite<input type="checkbox" name="file[]" value="{$file.value}" />
+    {elseif !$file.diff}
+        unchanged
+    {else}
+        new<input name="file[]" value="{$file.value}" type="checkbox" />
+        {/if}
+    </td>
+</tr>
+{/foreach}

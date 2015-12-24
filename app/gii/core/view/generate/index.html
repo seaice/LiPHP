@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        {include file='Common/header.html'}
+    </head>
+    <body class="frame-body">
+        <div class="breadcrumbs">
+            <ul>
+                <li>
+                    <a href="more-login.html">Home</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="more-login.html">Crud</a>
+                    <i class="icon-angle-right"></i>
+                </li>
+                <li>
+                    <a href="index.html">tables</a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Option</div>
+            <div class="panel-body">
+                <form class="form-horizontal" method="get">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Project</label>
+                        <div class="col-sm-4">
+                            <select class="form-control">
+                            {foreach $project as $value}
+                                <option value="{$value}">{$value}</option>
+                            {/foreach}
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block">This is just a supporting text</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Table</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" placeholder="Email" value="{$smarty.get.table}">
+                        </div>
+                        <div class="col-sm-4">
+                            <span class="help-block">This is just a supporting text</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Process</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Column</div>
+            <div class="panel-body">
+                <form class="form-horizontal" method="get">
+                    <table class="table table-hover table-nomargin table-bordered">
+                        <thead>
+                            <tr class='thefilter'>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Null</th>
+                                <th>Key</th>
+                                <th>Default</th>
+                                <th>Extra</th>
+                                <th>Comment</th>
+                                <th class='hidden-480'>Op</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {foreach $column as $value}
+                            <tr>
+                                <td>{$value.Field}</td>
+                                <td>{$value.Type}</td>
+                                <td>{$value.Null}</td>
+                                <td>{$value.Key}</td>
+                                <td>{$value.Default}</td>
+                                <td>{$value.Extra}</td>
+                                <td>{$value.Comment}</td>
+                                <td class='hidden-480'><a href="{url('crud/generate')}/table/{$v[0]}">generate</a></td>
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Validate<a class="btn btn-primary btn-xs pull-right btn-validate-add" href="#" role="button">Add</a></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6 validate-father hidden">
+                        <form class="form-horizontal" method="get">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Scene</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" placeholder="Scene" value="">
+                                </div>
+                            </div>
+                            {foreach $column as $value}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Col</label>
+                                <div class="col-sm-2">
+                                    <input class="form-control" placeholder="Col" value="{$value.Field}">
+                                </div>
+                                <div class="col-sm-4">
+                                    <select class="form-control column-validate-rule">
+                                        <option value="">option</option>
+                                        <option value="required">required</option>
+                                        <option value="remote">remote</option>
+                                        <option value="email">email</option>
+                                        <option value="url">url</option>
+                                        <option value="date">date</option>
+                                        <option value="dateISO">dateISO</option>
+                                        <option value="number">number</option>
+                                        <option value="digits">digits</option>
+                                        <option value="creditcard">creditcard</option>
+                                        <option value="equalTo">equalTo</option>
+                                        <option value="accept">accept</option>
+                                        <option value="maxlength">maxlength</option>
+                                        <option value="minlength">minlength</option>
+                                        <option value="rangelength">rangelength</option>
+                                        <option value="range">range</option>
+                                        <option value="max">max</option>
+                                        <option value="min">min</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control hidden rule-1" name="rule_1" placeholder="rule" value="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control hidden rule-2" name="rule_2" placeholder="rule" value="">
+                                </div>
+                            </div>
+                            {/foreach}
+                        </form>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default">Preview</button>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Code</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        filename
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-default">Process</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+        $(function(){
+            $(".column-validate-rule").on('change', function(){
+                $(this).parent().siblings('.col-sm-2').find('.rule-1').addClass('hidden');
+                $(this).parent().siblings('.col-sm-2').find('.rule-2').addClass('hidden');
+                var rule = $(this).val();
+                if(rule == 'remote'
+                    || rule == 'equalTo'
+                    || rule == 'accept'
+                    || rule == 'maxlength'
+                    || rule == 'minlength'
+                    || rule == 'max'
+                    || rule == 'min'
+                )
+                {
+                    $(this).parent().siblings('.col-sm-2').find('.rule-1').removeClass('hidden');
+                }
+                if(rule == 'range'
+                    || rule == 'rangelength'
+                )
+                {
+                    $(this).parent().siblings('.col-sm-2').find('.rule-1').removeClass('hidden');
+                    $(this).parent().siblings('.col-sm-2').find('.rule-2').removeClass('hidden');
+                }
+            });
+
+            $(".btn-validate-add").bind('click', function(){
+                $(".validate-father").clone().insertAfter(".validate-father").removeClass("hidden").removeClass("validate-father");
+            });
+        });
+        </script>
+    </body>
+</html>
