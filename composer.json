@@ -1,0 +1,8 @@
+{
+    "require": {
+        "li/li": "dev-master"
+    },
+    "autoload": {
+        "psr-4": { "Li\\": "li" }
+    }
+}
