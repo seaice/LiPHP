@@ -22,7 +22,9 @@ $model->where('id', 1)
 ```
 ## whereSql
 ```
-
+$model->whereSql('title=%s', 'li')
+$model->whereSql('id>%d and id < %d', 6, 9)
+$model->whereSql('title like %s and id < %d', "%li%", 100)
 ```
 ## order
 
