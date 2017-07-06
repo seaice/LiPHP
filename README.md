@@ -11,15 +11,18 @@ composer install
 $model = M('user');
 `
 ## where
-`
+```
 $model->where('id', 1)
+
 $model->where('id', '>', 1)
+
 $model->where('id', 'in', [1,2,3])
+
 $model->where( [
         ['id','in',array(1,2,3)],
         ['score','>',10],
     ]
-`
+```
 ## whereSql
 ## order
 
