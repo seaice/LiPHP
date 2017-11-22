@@ -1,10 +1,11 @@
 <?php
+namespace gii\core\controller;
+
 use Li\Db;
 use Li\Controller;
 use Li\File;
 
-
-class GenerateController extends Controller 
+class GenerateController extends Controller
 {
     // public function tableAction()
     // {
@@ -16,8 +17,8 @@ class GenerateController extends Controller
 
     public function generateAction()
     {
-        $this->assign('project', Generate::service()->getProject());
-        $this->assign('column', Generate::service()->getColumns($_GET['table']));
+        $this->assign('project', S('Generate')->getProject());
+        $this->assign('column', S('Generate')->getColumns($_GET['table']));
 
         $this->display();
     }
@@ -30,15 +31,12 @@ class GenerateController extends Controller
         $project=$_POST['project'];
         $env=$_POST['env'];
         $db=$_POST['db'];
-        $table=$_POST['table'];        
-        $validate=$_POST['validate'];
+        $table=$_POST['table'];
 
-        $file=Generate::service()->getModelFile($project,$env,$db,$table);
+        $file=S('Generate')->getModelFile($project, $env, $db, $table);
         $file['diff']=true;
-        if($file['exist'])
-        {
-            if(Generate::service()->getModelCode($this,$project,$env,$db,$table) == file_get_contents($file['path']))
-            {
+        if ($file['exist']) {
+            if (S('Generate')->getModelCode($this, $project, $env, $db, $table) == file_get_contents($file['path'])) {
                 $file['diff']=false;
             }
         }
@@ -53,20 +51,17 @@ class GenerateController extends Controller
      */
     public function modelAction()
     {
-        $this->assign('project',Generate::service()->getProject());
+        $this->assign('project', S('Generate')->getProject());
         $flagGenerate=false;
-        if(IS_POST)
-        {
+        if (IS_POST) {
             $project=$_POST['project'];
             $env=$_POST['env'];
             $db=$_POST['db'];
             $table=$_POST['table'];
 
-            $this->assign('columns',Generate::service()->getColumns($project,$env,$db,$table));
-            if(isset($_POST['generate']))
-            {
-                if(!empty($_POST['file']))
-                {
+            $this->assign('columns', S('Generate')->getColumns($project, $env, $db, $table));
+            if (isset($_POST['generate'])) {
+                if (!empty($_POST['file'])) {
                     $this->_generateCodeFile($_POST['file']);
 
                     $flagGenerate=true;
@@ -74,7 +69,7 @@ class GenerateController extends Controller
             }
         }
 
-        $this->assign('flagGenerate',$flagGenerate);
+        $this->assign('flagGenerate', $flagGenerate);
         $this->display();
     }
 
@@ -83,24 +78,21 @@ class GenerateController extends Controller
      */
     public function modelCodeAction()
     {
-        $project=$_GET['project'];
-        $env=$_GET['env'];
-        $db=$_GET['db'];
-        $table=$_GET['table'];
+        $project = $_GET['project'];
+        $env     = $_GET['env'];
+        $db      = $_GET['db'];
+        $table   = $_GET['table'];
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getModelFile($project,$env,$db,$table);
+        if (1 == get('diff')) {
+            $file = S('Generate')->getModelFile($project, $env, $db, $table);
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getModelCode($this,$project,$env,$db,$table);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getModelCode($this, $project, $env, $db, $table);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getModelCode($this,$project,$env,$db,$table);
+        } else {
+            $html=S('Generate')->getModelCode($this, $project, $env, $db, $table);
             highlight_string($html);
         }
     }
@@ -109,25 +101,22 @@ class GenerateController extends Controller
      */
     public function controllerCodeAction()
     {
-        $project=$_GET['project'];
-        $controller=$_GET['controller'];
-        $env=$_GET['env'];
-        $db=$_GET['db'];
-        $table=$_GET['table'];
+        $project    = $_GET['project'];
+        $controller = $_GET['controller'];
+        $env        = $_GET['env'];
+        $db         = $_GET['db'];
+        $table      = $_GET['table'];
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getControllerFile($project,$controller,$env,$db,$table);
+        if (1 == get('diff')) {
+            $file = S('Generate')->getControllerFile($project, $controller, $env, $db, $table);
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getControllerCode($this,$project,$controller,$env,$db,$table);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getControllerCode($this, $project, $controller, $env, $db, $table);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getControllerCode($this,$project,$controller,$env,$db,$table);
+        } else {
+            $html = S('Generate')->getControllerCode($this, $project, $controller, $env, $db, $table);
             highlight_string($html);
         }
     }
@@ -141,21 +130,18 @@ class GenerateController extends Controller
         $env=$_GET['env'];
         $db=$_GET['db'];
         $table=$_GET['table'];
-        $controller=Generate::service()->transName($table,false);
+        $controller=S('Generate')->transName($table, false);
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getTemplateFile($project,$env,$db,$table,'admin');
+        if (1 ==  get('diff')) {
+            $file=S('Generate')->getTemplateFile($project, $env, $db, $table, 'admin');
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getAdminCode($this,$project,$controller);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getAdminCode($this, $project, $controller);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getAdminCode($this,$project,$controller);
+        } else {
+            $html=S('Generate')->getAdminCode($this, $project, $controller);
             highlight_string($html);
         }
     }
@@ -169,21 +155,18 @@ class GenerateController extends Controller
         $db=$_GET['db'];
         $table=$_GET['table'];
 
-        $controller=Generate::service()->transName($table,false);
+        $controller=S('Generate')->transName($table, false);
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getTemplateFile($project,$env,$db,$table,'create');
+        if (1 == get('diff')) {
+            $file=S('Generate')->getTemplateFile($project, $env, $db, $table, 'create');
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getCreateCode($this,$project,$controller);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getCreateCode($this, $project, $controller);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getCreateCode($this,$project,$controller);
+        } else {
+            $html=S('Generate')->getCreateCode($this, $project, $controller);
             highlight_string($html);
         }
     }
@@ -197,21 +180,18 @@ class GenerateController extends Controller
         $db=$_GET['db'];
         $table=$_GET['table'];
 
-        $controller=Generate::service()->transName($table,false);
+        $controller=S('Generate')->transName($table, false);
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getTemplateFile($project,$env,$controller,$table,'update');
+        if (1 == get('diff')) {
+            $file=S('Generate')->getTemplateFile($project, $env, $controller, $table, 'update');
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getUpdateCode($this,$project,$controller);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getUpdateCode($this, $project, $controller);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getUpdateCode($this,$project,$controller);
+        } else {
+            $html=S('Generate')->getUpdateCode($this, $project, $controller);
             highlight_string($html);
         }
     }
@@ -223,19 +203,16 @@ class GenerateController extends Controller
         $db=$_GET['db'];
         $table=$_GET['table'];
 
-        if($_GET['diff'] == 1)
-        {
-            $file=Generate::service()->getTemplateFile($project,$env,$db,$table,'_form');
+        if (1 == get('diff')) {
+            $file=S('Generate')->getTemplateFile($project, $env, $db, $table, '_form');
             $lines1 = file($file['path']);
-            $lines2 = Generate::service()->getFormCode($this,$project,$env,$db,$table);
-            $compare = Generate::service()->textDiff($lines1, $lines2);
+            $lines2 = S('Generate')->getFormCode($this, $project, $env, $db, $table);
+            $compare = S('Generate')->textDiff($lines1, $lines2);
 
-            $this->assign('diff',$compare);
+            $this->assign('diff', $compare);
             $this->display('template/diff');
-        }
-        else
-        {
-            $html=Generate::service()->getFormCode($this,$project,$env,$db,$table);
+        } else {
+            $html=S('Generate')->getFormCode($this, $project, $env, $db, $table);
             highlight_string($html);
         }
     }
@@ -243,22 +220,18 @@ class GenerateController extends Controller
 
     public function controllerAction()
     {
-        $this->assign('project',Generate::service()->getProject());
+        $this->assign('project', S('Generate')->getProject());
         $flagGenerate=false;
-        if(IS_POST)
-        {
-
-            if(isset($_POST['generate']))
-            {
-                if(!empty($_POST['file']))
-                {
+        if (IS_POST) {
+            if (isset($_POST['generate'])) {
+                if (!empty($_POST['file'])) {
                     $this->_generateCodeFile($_POST['file']);
                     $flagGenerate=true;
                 }
             }
         }
 
-        $this->assign('flagGenerate',$flagGenerate);
+        $this->assign('flagGenerate', $flagGenerate);
 
         $this->display();
     }
@@ -271,13 +244,11 @@ class GenerateController extends Controller
         $project=$_POST['project'];
         $controller=$_POST['controller'];
 
-        $file=Generate::service()->getControllerFile($project,$controller);
+        $file=S('Generate')->getControllerFile($project, $controller);
         $file['diff']=true;
 
-        if($file['exist'])
-        {
-            if(Generate::service()->getControllerCode($this,$project,$controller) == file_get_contents($file['path']))
-            {
+        if ($file['exist']) {
+            if (S('Generate')->getControllerCode($this, $project, $controller) == file_get_contents($file['path'])) {
                 $file['diff']=false;
             }
         }
@@ -285,191 +256,164 @@ class GenerateController extends Controller
         $this->assign('files', array($file));
 
         echo $this->fetch('generate/file_list');
-        
     }
 
     // private function __formCode($project,$env,$db,$table)
     // {
-    //     $this->assign('columns', Generate::service()->getColumns($project,$env,$db,$table));
+    //     $this->assign('columns', S('Generate')->getColumns($project,$env,$db,$table));
     //     $html=$this->fetch('template/template_form');
 
-    //     return $html;        
+    //     return $html;
     // }
 
     public function previewCrudAction()
     {
-        $project=$_POST['project'];
-        $env=$_POST['env'];
-        $db=$_POST['db'];
-        $table=$_POST['table'];        
-        $validate=$_POST['validate'];
+        $project    = $_POST['project'];
+        $env        = $_POST['env'];
+        $db         = $_POST['db'];
+        $table      = $_POST['table'];
 
         // model file
-        $fileModel=Generate::service()->getModelFile($project,$env,$db,$table);
-        $fileModel['diff']=true;
-        if($fileModel['exist'])
-        {
-            if(Generate::service()->getModelCode($this,$project,$env,$db,$table) == file_get_contents($fileModel['path']))
-            {
-                $fileModel['diff']=false;
+        $fileModel = S('Generate')->getModelFile($project, $env, $db, $table);
+        $fileModel['diff'] = true;
+        if ($fileModel['exist']) {
+            if (S('Generate')->getModelCode($this, $project, $env, $db, $table) == file_get_contents($fileModel['path'])) {
+                $fileModel['diff'] = false;
             }
         }
+
         $this->clearAllAssign();
-        $controller = Generate::service()->transName($table);
+        $controller = S('Generate')->transName($table);
 
         // controller file
-        $fileController=Generate::service()->getControllerFile($project,$controller,$env,$db,$table);
-        $fileController['diff']=true;
+        $fileController=S('Generate')->getControllerFile($project, $controller, $env, $db, $table);
+        $fileController['diff'] = true;
 
-        if($fileController['exist'])
-        {
-            if(Generate::service()->getControllerCode($this,$project,$controller,$table) == file_get_contents($fileController['path']))
-            {
-                $fileController['diff']=false;
+        if ($fileController['exist']) {
+            if (S('Generate')->getControllerCode($this, $project, $controller, $table) == file_get_contents($fileController['path'])) {
+                $fileController['diff'] = false;
             }
         }
         $this->clearAllAssign();
 
-        $controller = Generate::service()->transName($table,false);
+        $controller = S('Generate')->transName($table, false);
 
         // admin file
-        $fileAdmin=Generate::service()->getTemplateFile($project,$env,$db,$table,'admin');
+        $fileAdmin=S('Generate')->getTemplateFile($project, $env, $db, $table, 'admin');
         $fileAdmin['diff']=true;
 
-        if($fileAdmin['exist'])
-        {
-            if(Generate::service()->getAdminCode($this,$project,$controller) == file_get_contents($fileAdmin['path']))
-            {
+        if ($fileAdmin['exist']) {
+            if (S('Generate')->getAdminCode($this, $project, $controller) == file_get_contents($fileAdmin['path'])) {
                 $fileAdmin['diff']=false;
             }
         }
         $this->clearAllAssign();
 
         // create file
-        $fileCreate=Generate::service()->getTemplateFile($project,$env,$db,$table,'create');
+        $fileCreate=S('Generate')->getTemplateFile($project, $env, $db, $table, 'create');
         $fileCreate['diff']=true;
 
-        if($fileCreate['exist'])
-        {
-            // debug(strlen(Generate::service()->getCreateCode($this,$project,$controller)));
+        if ($fileCreate['exist']) {
+            // debug(strlen(S('Generate')->getCreateCode($this,$project,$controller)));
             // debug(strlen(file_get_contents($fileCreate['path'])));
-            // echo '<div style="display:none;">'.Generate::service()->getCreateCode($this,$project,$controller).'</div>';
+            // echo '<div style="display:none;">'.S('Generate')->getCreateCode($this,$project,$controller).'</div>';
             // echo '<div style="display:none;">'.(file_get_contents($fileCreate['path'])).'</div>';
 
-            if(Generate::service()->getCreateCode($this,$project,$controller) == file_get_contents($fileCreate['path']))
-            {
+            if (S('Generate')->getCreateCode($this, $project, $controller) == file_get_contents($fileCreate['path'])) {
                 $fileCreate['diff']=false;
             }
         }
         $this->clearAllAssign();
 
         // update file
-        $fileUpdate=Generate::service()->getTemplateFile($project,$env,$db,$table,'update');
+        $fileUpdate=S('Generate')->getTemplateFile($project, $env, $db, $table, 'update');
         $fileUpdate['diff']=true;
 
-        if($fileUpdate['exist'])
-        {
-            if(Generate::service()->getUpdateCode($this,$project,$controller) == file_get_contents($fileUpdate['path']))
-            {
+        if ($fileUpdate['exist']) {
+            if (S('Generate')->getUpdateCode($this, $project, $controller) == file_get_contents($fileUpdate['path'])) {
                 $fileUpdate['diff']=false;
             }
         }
         $this->clearAllAssign();
 
         // _form file
-        $fileForm=Generate::service()->getTemplateFile($project,$env,$db,$table,'_form');
+        $fileForm=S('Generate')->getTemplateFile($project, $env, $db, $table, '_form');
         $fileForm['diff']=true;
 
-        if($fileForm['exist'])
-        {
-            // debug(Generate::service()->getFormCode($this,$project,$env,$db,$table));
+        if ($fileForm['exist']) {
+            // debug(S('Generate')->getFormCode($this,$project,$env,$db,$table));
             // debug(file_get_contents($fileForm['path']));
-            // debug(strlen(Generate::service()->getFormCode($this,$project,$env,$db,$table)));
+            // debug(strlen(S('Generate')->getFormCode($this,$project,$env,$db,$table)));
             // debug(strlen(file_get_contents($fileForm['path'])));
-            if(Generate::service()->getFormCode($this,$project,$env,$db,$table) == file_get_contents($fileForm['path']))
-            {
+            if (S('Generate')->getFormCode($this, $project, $env, $db, $table) == file_get_contents($fileForm['path'])) {
                 $fileForm['diff']=false;
             }
-        }               
+        }
 
         $this->assign('files', array($fileModel,$fileController,$fileAdmin,$fileCreate,$fileUpdate,$fileForm));
 
-        echo $this->fetch('generate/file_list');        
+        echo $this->fetch('generate/file_list');
     }
 
     public function crudAction()
     {
-        $this->assign('project',Generate::service()->getProject());
+        $this->assign('project', S('Generate')->getProject());
         $flagGenerate=false;
 
-        if(IS_POST)
-        {
+        if (IS_POST) {
             $project=$_POST['project'];
             $env=$_POST['env'];
             $db=$_POST['db'];
             $table=$_POST['table'];
 
-            $this->assign('columns',Generate::service()->getColumns($project,$env,$db,$table));
+            $this->assign('columns', S('Generate')->getColumns($project, $env, $db, $table));
 
-            if(isset($_POST['generate']))
-            {
-                if(!empty($_POST['file']))
-                {
+            if (isset($_POST['generate'])) {
+                if (!empty($_POST['file'])) {
                     $this->_generateCodeFile($_POST['file']);
                     $flagGenerate=true;
                 }
             }
         }
-        $this->assign('flagGenerate',$flagGenerate);
+        $this->assign('flagGenerate', $flagGenerate);
         $this->display();
     }
 
     private function _generateCodeFile($files)
     {
-        foreach($files as $value)
-        {
-            $value = explode('/',$value);
-            if($value[0] == 'model')
-            {
-                $file=Generate::service()->getModelFile($value[1],$value[2],$value[3],$value[4]);
-                file_put_contents($file['path'],Generate::service()->getModelCode($this,$value[1],$value[2],$value[3],$value[4]));
-            }
-            else if($value[0] == 'controller')
-            {
-                $file=Generate::service()->getControllerFile($value[1],$value[2]);
-                file_put_contents($file['path'],Generate::service()->getControllerCode($this,$value[1],$value[2]));
-            }
-            else if($value[0] == 'template')
-            {
-                $controller = Generate::service()->transName($value[4],false);
+        foreach ($files as $value) {
+            $value = explode('/', $value);
+            if ($value[0] == 'model') {
+                $file=S('Generate')->getModelFile($value[1], $value[2], $value[3], $value[4]);
+                file_put_contents($file['path'], S('Generate')->getModelCode($this, $value[1], $value[2], $value[3], $value[4]));
+            } elseif ($value[0] == 'controller') {
+                $file=S('Generate')->getControllerFile($value[1], $value[2]);
+                file_put_contents($file['path'], S('Generate')->getControllerCode($this, $value[1], $value[2]));
+            } elseif ($value[0] == 'template') {
+                $controller = S('Generate')->transName($value[4], false);
 
-                $file=Generate::service()->getTemplateFile($value[1],$value[2],$value[3],$value[4],$value[5]);
+                $file=S('Generate')->getTemplateFile($value[1], $value[2], $value[3], $value[4], $value[5]);
                 $templateFunc = 'get'.ucfirst($value[5]).'Code';
                     // debug($value);
-                if($value[5] == '_form')
-                {
-                    File::write($file['path'],Generate::service()->getFormCode($this,$value[1],$value[2],$value[3],$value[4]));
-                }
-                else
-                {
-                    File::write($file['path'],Generate::service()->$templateFunc($this,$value[1],$controller));
+                if ($value[5] == '_form') {
+                    File::write($file['path'], S('Generate')->getFormCode($this, $value[1], $value[2], $value[3], $value[4]));
+                } else {
+                    File::write($file['path'], S('Generate')->$templateFunc($this, $value[1], $controller));
                 }
                 
                 // die;
                 // file_put_contents($file['path'],$this->$templateFunc($project,$value[1]));
             }
             
-            // $file=Generate::service()->getModelFile($project,$env,$db,$value);
+            // $file=S('Generate')->getModelFile($project,$env,$db,$value);
             // file_put_contents($file['path'],$this->_modelCode($project,$env,$db,$value));
             
-            // $file=Generate::service()->getModelFile($project,$env,$db,$value);
+            // $file=S('Generate')->getModelFile($project,$env,$db,$value);
             // file_put_contents($file['path'],$this->_modelCode($project,$env,$db,$value));
             
-            // $file=Generate::service()->getModelFile($project,$env,$db,$value);
+            // $file=S('Generate')->getModelFile($project,$env,$db,$value);
             // file_put_contents($file['path'],$this->_modelCode($project,$env,$db,$value));
             $flagGenerate=true;
-        }    
-
+        }
     }
 }
-

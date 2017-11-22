@@ -1,5 +1,6 @@
-<?php
-use Li\Controller;
+{literal}<?php{/literal}
+namespace {$project}\core\controller;
+
 use Li\GridView;
 use Li\Validate;
 
@@ -7,96 +8,79 @@ class {$controller}Controller extends Controller
 {
     public function adminAction()
     {
-        $model = {$controller}::model();
+        $model = M('{$controller}');
 
-        $gridview = GridView::init($this, $model, 
-            array(
-                'columns'=>
-                    array(
+        $gridview = GridView::init($this, $model->search(), 
+            [
+                'columns' => [
 {foreach $columns as $col}
-                        array(
-                            'name'=>'{$col.Field}',
-                            'filter'=>true,
-                        ),
+                    '{$col.Field}',
 {/foreach}
-                        array(
-                            'alias'=>'操作',
-                            'buttons'=>array(
-                                array(
-                                    'name'=>'编辑',
-                                    'action'=>'update',
-                                ),
-                                array(
-                                    'name'=>'删除',
-                                    'action'=>'delete',
-                                ),
-                            )
-                        ),
-                ),
-            )
+                    [
+                        'alias' => '操作',
+                        'buttons' => [
+                            [
+                                'name'=>'编辑',
+                                'action'=>'update',
+                            ],
+                            [
+                                'name'=>'删除',
+                                'action'=>'delete',
+                            ],
+                        ]
+                    ],
+                ],
+            ]
         );
 
-        $this->assign('gridview',$gridview);
+        $this->assign('gridview', $gridview);
         $this->display();
     }
 
-    public function updateAction()
+    public function createAction()
     {
-        $id = $_GET['id'];
-        $model = {$controller}::model();
+        $model = M('{$controller}');
 
-        if(IS_POST)
-        {
-            if(empty($model->validate($_POST['data'])))
-            {
-                if($model->updateByPk($id, $_POST['data']) > 0)
-                {
-                    $this->assign('message','success');
-                }
+        if (IS_POST) {
+            $model->attributes = $_POST['data'];
+            if ($model->save()) {
+                $this->assign('message', 'success');
             }
         }
-        $data = $model->findByPk($id);
-        $this->assign('data',$data);
+
+        $this->assign('model', $model);
+        $this->display();
+    }
+    
+    public function updateAction()
+    {
+        $id = get('id');
+        $model = M('{$controller}')->findByPk($id);
+
+        if ($model == null) {
+            $this->redirect('{lcfirst($controller)}/admin');
+        }
+
+        if (IS_POST) {
+            $model->attributes = $_POST['data'];
+            if ($model->save()) {
+                $this->assign('message', 'success');
+            }
+        }
+
+        $this->assign('model', $model);
         $this->display();
     }
 
     public function deleteAction()
     {
-        $id=$_GET['id'];
-        if(IS_AJAX)
-        {
-            if({$controller}::model()->deleteByPk($id))
-            {
+        $id = get('id');
+        if (IS_AJAX) {
+            if (M('{$controller}')->deleteByPk($id)) {
                 $this->outputJSON(true);
             }
         }
 
         $this->outputJSON(false);
     }
-
-    public function createAction()
-    {
-        $model = {$controller}::model();
-
-        if(IS_POST)
-        {
-            $model->data = $_POST['data'];
-            if(empty($model->validate($_POST['data'])))
-            {
-                if($model->save($_POST['data']))
-                {
-                    $this->assign('message','success');
-                    $id = $model->getLastId();
-                }
-
-                $model->findByPk($id);
-            }
-        }
-
-        $this->assign('model',$model);
-        $this->display();
-    }
 }
-
-?>
-

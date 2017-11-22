@@ -1,17 +1,17 @@
-<?php 
+<?php
+namespace gii\core\service;
+
 use Li\Service;
 
-class Menu extends Service 
+class Menu extends Service
 {
-
-    public static function service($className=__CLASS__)
+    public static function service($className = __CLASS__)
     {
         return parent::service($className);
     }
 
     public function getMenu()
     {
-
         $menu = array(
             'Dashboard'=>url('site/dashboard'),
             'Generate'=>array(
@@ -27,4 +27,3 @@ class Menu extends Service
         return $menu;
     }
 }
-

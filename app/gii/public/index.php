@@ -1,13 +1,10 @@
 <?php
-include ('../../../li/App.php');
+namespace gii;
 
-define('APP_PATH', realpath(__DIR__).'\\'.'..'.'\\');
-
-// define('APP', 'core'); // 项目目录
+error_reporting(E_ALL ^ E_NOTICE);
+define('PATH_APP', realpath(__DIR__).'\\'.'..'.'\\');
 define('ENV', 'shb');       // 配置文件目录
 define('DEBUG', true);      // 开发或者调试模式
-// define('APP_PATH', realpath(__DIR__)); // 应用目录
 
-// \Li\App::init()->run();
-include ('../../../li/bootstrap.php');
-?>
+include('../../../vendor/autoload.php');
+\Li\App::init()->run(__NAMESPACE__);

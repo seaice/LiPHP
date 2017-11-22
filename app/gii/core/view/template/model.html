@@ -1,5 +1,9 @@
-<?php
+{literal}<?php{/literal}
+namespace {$project}\core\model;
+
 use Li\Model;
+use Li\Criteria;
+use Li\DataProvider;
 /**
  * This is the model class for table "{$table}".
  *
@@ -10,66 +14,55 @@ use Li\Model;
  */
 class {$model} extends Model
 {
+    protected $_pk = {$pk};
 
-    public $pk = {$pk};
-    public $tableName = '{$table}';
-
-    public static function model($className=__CLASS__)
+    public static function model($className = __CLASS__)
     {
         return parent::model($className);
     }
 
-    public function getTabelName()
+    public function getTable()
     {
         return '{$table}';
     }
 
     public function alias()
     {
-        return array(
+        return [
 {foreach $columns as $column}
-            '{$column.Field}'=>'{if $column.Comment!=''}{$column.Comment}{else}{$column.Field}{/if}',
+            '{$column.Field}' => '{if $column.Comment!=''}{$column.Comment}{else}{$column.Field}{/if}',
 {/foreach}
-        );
+        ];
     }
 
     public function rules()
     {
-        return array(
-            'default'=>array(
+        $rules['default'] = [
 {foreach $columns as $column}
 {if !empty($column['validate'])}
-                '{$column.Field}'=>array(
-{foreach $column['validate'] as $v}
-{if $v[0] == 'maxlength'}
-                    array('{$v[0]}','{$v[1]}','{$v[2]}'),
-{elseif $v[0] == 'date'}
-                    array('{$v[0]}','{$v[1]}','{$v[2]}'),
-{else}
-                    array('{$v[0]}','{$v[1]}'),
+            '{$column.Field}' => '{$column.validate}',
 {/if}
 {/foreach}
-                ),
-{/if}
-{/foreach}
-            ),
-        );
+        ];
+
+        return $rules;
     }
 
-
-    public function search($criteria)
+    public function relations()
     {
-{foreach $columns as $column}
-        $this->filter('{$column.Field}');
-{/foreach}
+        return [];
+    }
 
-        $criteriaCount = $this->getCriteria();
-        $data = $this->findAll($criteria);
-        return array(
-            $data,
-            $criteriaCount,
-        );
+    public function search()
+    {
+        $this->attributes = $_GET;
+
+        $criteria = new Criteria();
+{foreach $columns as $column}
+        $criteria->compare('{$column.Field}', $this->{$column.Field});
+{/foreach}
+        return new DataProvider($this, array(
+            'criteria'=>$criteria,
+        ));
     }
 }
-
-?>

@@ -1,102 +1,98 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        {include file='Common/header.html'}
-        <script src="{url()}/assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="{url()}/assets/js/colorbox/jquery.colorbox-min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{url()}/assets/js/colorbox/colorbox.css" />
-    </head>
-    <body class="frame-body">
-        <ol class="breadcrumb">
-            <li><a href="">Home</a></li>
-            <li>Generate</li>
-            <li>controller</li>
-        </ol>
+<head>
+{include file='Common/header.html'}
+</head>
+<body class="frame-body">
+<ol class="breadcrumb">
+    <li><a href="">Home</a></li>
+    <li>Generate</li>
+    <li>controller</li>
+</ol>
 
-        <form class="form-horizontal" method="POST">
-        <div class="panel panel-default">
-            <div class="panel-heading">Option</div>
-            <div class="panel-body">
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Project</label>
-                    <div class="col-sm-4">
-                        <select name="project" class="form-control">
-                        {foreach $project as $value}
-                            <option {if $smarty.post.project==$value}selected{/if} value="{$value}">{$value}</option>
-                        {/foreach}
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <span class="help-block">This is just a supporting text</span>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="inputEmail3" class="col-sm-2 control-label">Controller</label>
-                    <div class="col-sm-4">
-                        <input name="controller" class="form-control" placeholder="controller" value="{$smarty.post.controller}">
-                    </div>
-                    <div class="col-sm-4">
-                        <span class="help-block">This is just a supporting text</span>
-                    </div>
-                </div>
+<form class="form-horizontal" method="POST">
+<div class="panel panel-default">
+    <div class="panel-heading">Option</div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Project</label>
+            <div class="col-sm-4">
+                <select name="project" class="form-control">
+                {foreach $project as $value}
+                    <option {if isset($smarty.post.project) && $smarty.post.project==$value}selected{/if} value="{$value}">{$value}</option>
+                {/foreach}
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <span class="help-block">This is just a supporting text</span>
             </div>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <button type="button" name="preview" value="preview" class="btn btn-default btn-preview">Preview</button>
-            <button type="submit" name="generate" value="generate" class="btn btn-default">Generate</button>
-        </div>
-
-        <div class="panel panel-default hidden panel-code">
-            <div class="panel-heading">Code</div>
-            <div class="panel-body">
-                <table class="table table-hover table-nomargin table-bordered">
-                    <thead>
-                        <tr class='thefilter'>
-                            <th>Code File</th>
-                            <th>Generate</th>
-                        </tr>
-                    </thead>
-                    <tbody class="code-tbody">
-                    </tbody>
-                </table>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Controller</label>
+            <div class="col-sm-4">
+                <input name="controller" class="form-control" placeholder="controller" value="{if isset($smarty.post.controller)}{$smarty.post.controller}{/if}">
+            </div>
+            <div class="col-sm-4">
+                <span class="help-block">This is just a supporting text</span>
             </div>
         </div>
-        </form>
-        {if $flagGenerate}
-        <div class="alert alert-success" role="alert">
-            The code has been generated successfully.
-        </div>
-        {/if}
-        <script type="text/javascript">
-        $(function(){
+    </div>
+</div>
 
-            $(".btn-preview").on('click', function(){
-                var project = $('select[name="project"]').val();
-                var controller = $('input[name="controller"]').val();
-                
-                {literal}
-                $.post('previewController', 
-                    {project:project,controller:controller},
-                    function(data){
-                        $(".code-tbody").empty();
-                        $('.panel-code').removeClass('hidden');
-                        $(".code-tbody").append(data);
+<div style="margin-bottom: 15px;">
+    <button type="button" name="preview" value="preview" class="btn btn-default btn-preview">Preview</button>
+    <button type="submit" name="generate" value="generate" class="btn btn-default">Generate</button>
+</div>
 
-                });
-                {/literal}
-            });
+<div class="panel panel-default hidden panel-code">
+    <div class="panel-heading">Code</div>
+    <div class="panel-body">
+        <table class="table table-hover table-nomargin table-bordered">
+            <thead>
+                <tr class='thefilter'>
+                    <th>Code File</th>
+                    <th>Generate</th>
+                </tr>
+            </thead>
+            <tbody class="code-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+</form>
+{if $flagGenerate}
+<div class="alert alert-success" role="alert">
+    The code has been generated successfully.
+</div>
+{/if}
+<script type="text/javascript">
+$(function(){
 
-            {literal}
-            $(document).on('click','.codeview',function(e){
-                e.preventDefault();
-                $.colorbox({iframe:true, href:$(this).attr('href'),width:"80%", height:"80%"});
-            });
-            {/literal}
+    $(".btn-preview").on('click', function(){
+        var project = $('select[name="project"]').val();
+        var controller = $('input[name="controller"]').val();
+        
+        {literal}
+        $.post('previewController', 
+            {project:project,controller:controller},
+            function(data){
+                $(".code-tbody").empty();
+                $('.panel-code').removeClass('hidden');
+                $(".code-tbody").append(data);
 
         });
-        </script>
-    </body>
+        {/literal}
+    });
+
+    {literal}
+    $(document).on('click','.codeview',function(e){
+        e.preventDefault();
+        $.colorbox({iframe:true, href:$(this).attr('href'),width:"80%", height:"80%"});
+    });
+    {/literal}
+
+});
+</script>
+</body>
 </html>

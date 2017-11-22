@@ -1,4 +1,4 @@
-{literal}{if $smarty.get.from}{/literal}
+{literal}{if isset($smarty.get.from)}{/literal}
 <a type="button" class="btn btn-default btn-sm mb10" href="{literal}{urldecode($smarty.get.from)}{/literal}">
     <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span> 返回
 </a>
@@ -16,21 +16,21 @@
     <div class="form-group">
         <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
         <div class="col-sm-10">
-            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}">
+            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{$model->{/literal}{$col.Field}}">
         </div>
     </div>
 {elseif $col.Type == 'text' || $col.Type == 'mediumtext' || $col.Type == 'longtext'}
     <div class="form-group">
         <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
         <div class="col-sm-10">
-            <textarea name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}">{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}</textarea>
+            <textarea name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}">{literal}{$model->{/literal}{$col.Field}}</textarea>
         </div>
     </div>
 {elseif $col.dataType == 'string'}
     <div class="form-group">
         <label for="{$col.Field}" class="col-sm-2 control-label">{$col.Field}</label>
         <div class="col-sm-10">
-            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{if isset($data.{/literal}{$col.Field}{literal})}{$data.{/literal}{$col.Field}{literal}}{/if}{/literal}">
+            <input name="data[{$col.Field}]" class="form-control" placeholder="{$col.Field}" value="{literal}{$model->{/literal}{$col.Field}}">
         </div>
     </div>
 {/if}
@@ -44,13 +44,10 @@
 {literal}
 <script type="text/javascript">
 $(function(){
-    {$model->getValidate()}
-    {$model->getError()}
-    $.validator.addMethod("date", 
-        function(value,element,params) {
-            return moment(value, params, true).isValid();
-        }
-    );
+    var errors = '{$model->getValidator()}';
+{literal}
+    validator.init({errors: errors});
+{/literal}
 });
 </script>
 {/literal}

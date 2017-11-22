@@ -1,0 +1,4 @@
+.DS_Store
+app/gii/runtime/*
+app/admin/runtime/*
+app/base/runtime/*
