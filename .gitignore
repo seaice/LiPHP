@@ -2,3 +2,5 @@
 app/gii/runtime/*
 app/admin/runtime/*
 app/base/runtime/*
+vendor/*
+composer.lock
