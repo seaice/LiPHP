@@ -290,7 +290,7 @@ class GenerateController extends Controller
         $fileController['diff'] = true;
 
         if ($fileController['exist']) {
-            if (S('Generate')->getControllerCode($this, $project, $controller, $table) == file_get_contents($fileController['path'])) {
+            if (S('Generate')->getControllerCode($this, $project, $controller, $env, $db, $table) == file_get_contents($fileController['path'])) {
                 $fileController['diff'] = false;
             }
         }

@@ -307,18 +307,7 @@ body {
     float: left;
     color: #fff;
     font-size: 20px;
-    margin-top: 9px;
-    padding-right: 69px;
-    padding-left: 35px;
-    padding-bottom: 2px;
-    background: url("../img/logo.png") no-repeat
-}
-
-@media only screen and (-webkit-min-device-pixel-ratio: 2) {
-    #navigation #brand {
-        background: url("../img/logo@2x.png") no-repeat;
-        background-size: 22px 22px
-    }
+    line-height: 40px;
 }
 
 #navigation #brand:hover {

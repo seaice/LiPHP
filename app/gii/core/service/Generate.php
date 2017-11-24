@@ -126,7 +126,7 @@ class Generate extends Service
 
         $file['file'] = 'app' . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'model' . DIRECTORY_SEPARATOR . $model .'.php';
         $file['path'] = PATH_BASE . $file['file'];
-        $file['url'] = url().'/generate/modelCode/project/'.$project.'/env/'.$env.'/db/'.$db.'/table/'.$table;
+        $file['url'] = url('generate/modelCode/project/'.$project.'/env/'.$env.'/db/'.$db.'/table/'.$table);
         $file['exist'] = false;
         $file['type'] = 'model';
         $file['value'] = 'model/'.$project.'/'.$env.'/'.$db.'/'.$table;
@@ -146,7 +146,7 @@ class Generate extends Service
         $file=null;
         $file['file'] = 'app'.DIRECTORY_SEPARATOR.$project.DIRECTORY_SEPARATOR.'core'. DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . ucfirst($controller) .'Controller.php';
         $file['path'] = PATH_BASE.$file['file'];
-        $file['url'] = url().'/generate/controllerCode/project/'.$project.'/controller/'.$controller.'/env/'.$env.'/db/'.$db.'/table/'.$table;
+        $file['url'] = url('/generate/controllerCode/project/'.$project.'/controller/'.$controller.'/env/'.$env.'/db/'.$db.'/table/'.$table);
         $file['exist'] = false;
         $file['type'] = 'controller';
         $file['value'] = 'controller/'.$project.'/'.$controller.'/'.$env.'/'.$db.'/'.$table;
@@ -164,7 +164,7 @@ class Generate extends Service
 
         $file['file'] = 'app'.DIRECTORY_SEPARATOR.$project.DIRECTORY_SEPARATOR.'core'. DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR. $action.'.html';
         $file['path'] = PATH_BASE.$file['file'] ;
-        $file['url'] = url().'/generate/'.$action.'Code/project/'.$project.'/env/'.$env.'/db/'.$db.'/table/'.$table;
+        $file['url'] = url('/generate/'.$action.'Code/project/'.$project.'/env/'.$env.'/db/'.$db.'/table/'.$table);
         $file['exist'] = false;
         $file['type'] = 'template';
         $file['name'] = $action;

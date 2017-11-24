@@ -1,5 +1,0 @@
-<?php
-
-$config['database']=array(
-
-);
