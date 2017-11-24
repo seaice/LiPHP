@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Env</label>
                 <div class="col-sm-4">
-                    <input name="env" class="form-control" placeholder="env" value="{if isset($smarty.post.env)}{$smarty.post.env}{/if}">
+                    <input name="env" class="form-control" placeholder="env" value="{if isset($smarty.post.env)}{$smarty.post.env}{else}dev{/if}">
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block">This is just a supporting text</span>
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Db</label>
                 <div class="col-sm-4">
-                    <input name="db" class="form-control" placeholder="db" value="{if isset($smarty.post.db)}{$smarty.post.db}{/if}">
+                    <input name="db" class="form-control" placeholder="db" value="{if isset($smarty.post.db)}{$smarty.post.db}{else}default{/if}">
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block">This is just a supporting text</span>
@@ -97,16 +97,19 @@
             var table = $('input[name="table"]').val();
             $(".alert-success").hide();
 
-            {literal}
-            $.post('previewModel', 
-                {project:project,env:env,db:db,table:table},
+            $.post('{url("generate/previewModel")}',
+                {
+                    project:project,
+                    env:env,
+                    db:db,
+                    table:table
+                },
                 function(data){
                     $(".code-tbody").empty();
                     $('.panel-code').removeClass('hidden');
                     $(".code-tbody").append(data);
 
             });
-            {/literal}
         });
 
         {literal}

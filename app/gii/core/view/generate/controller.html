@@ -73,16 +73,17 @@ $(function(){
         var project = $('select[name="project"]').val();
         var controller = $('input[name="controller"]').val();
         
-        {literal}
-        $.post('previewController', 
-            {project:project,controller:controller},
+        $.post('{url("generate/previewController")}',
+            {
+                project:project,
+                controller:controller
+            },
             function(data){
                 $(".code-tbody").empty();
                 $('.panel-code').removeClass('hidden');
                 $(".code-tbody").append(data);
 
         });
-        {/literal}
     });
 
     {literal}

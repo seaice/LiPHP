@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Env</label>
                 <div class="col-sm-4">
-                    <input name="env" class="form-control" placeholder="env" value="{if isset($smarty.post.env)}{$smarty.post.env}{/if}">
+                    <input name="env" class="form-control" placeholder="env" value="{if isset($smarty.post.env)}{$smarty.post.env}{else}dev{/if}">
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block">This is just a supporting text</span>
