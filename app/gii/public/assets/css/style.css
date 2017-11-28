@@ -24,14 +24,13 @@ body {
     padding: 0
 }
 
-.frame_left {
+.frame-left {
     width: 200px;
     float: left;
     background: #e9f1f5;
-    /*border-right: 1px solid #368ee0;*/
 }
 
-.frame_right {
+.frame-right {
     position: absolute;
     top: 40px;
     left: 200px;
