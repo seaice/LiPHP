@@ -1,13 +1,10 @@
 <?php
-use Li\Controller;
-
+namespace hello\core\controller;
 
 class SiteController extends Controller 
 {
     public function indexAction()
     {
-        $this->assign('words', 'hello world!');
         $this->display();
     }
 }
-
