@@ -1,10 +1,11 @@
 <?php
-include ('../../../li/App.php');
+namespace admin;
 
-define('APP_PATH', realpath(__DIR__).'\\'.'..'.'\\');
+// error_reporting(E_ALL ^ E_NOTICE);
+// error_reporting(0);
 
-define('ENV', 'shb');       // 配置文件目录
-define('DEBUG', true);      // 开发或者调试模式
+define('PATH_APP', realpath(__DIR__).'\\'.'..'.'\\');
+define('ENV', 'dev');       // 配置文件目录
 
-include ('../../../li/bootstrap.php');
-?>
+include('../../../vendor/autoload.php');
+\Li\App::init()->run(__NAMESPACE__);

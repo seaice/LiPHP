@@ -1,17 +1,10 @@
 <?php
-use Li\Controller;
-/**
- * This is the model class for table "".
- *
- * The followings are the available columns in table '':
+namespace admin\core\controller;
 
- */
-class Controller extends Controller
+
+class Controller extends \Li\Controller
 {
-    public function indexAction()
+    public function init()
     {
-        echo 'Hello World!';
     }
 }
-
-?>
