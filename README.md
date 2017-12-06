@@ -46,11 +46,11 @@ $criteria->where('id', 1);
 $model->find($criteria);
 ```
 ### relation (support BelongsToRelation)
-
-####延迟查询方式
 ```
 '关系名' => ['当前表列名', 关系, '关联model名', '关联表列名']
-
+```
+#### 延迟查询方式
+```
 Class UserDetail {
     ...
     public function relations()
@@ -67,7 +67,7 @@ $detail = M('UserDetail')->where('uid', 1)->find();
 var_dump($detail->user->id);
 var_dump($detail->user->name);
 ```
-####一次查询方式
+#### 一次查询方式
 ```
 $detail = M('UserDetail')->where('uid', 1)->with('user')->find();
 
