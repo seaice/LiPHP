@@ -8,9 +8,21 @@ composer install
 
 # ORM
 ```
-$model = M('user');
+$model = M('User');
 ```
-## where
+## create
+```
+$model = M('User');
+$model-name = "li";
+if(!$model->save()) {
+    var_dump($model->errnors);
+}
+```
+
+## Retrieve
+
+
+### use where or whereSql
 ```
 $model->where('id', 1)
       ->where('id', '>', 1)
@@ -20,13 +32,18 @@ $model->where('id', 1)
           ['score','>',10],
       ])
 ```
-## whereSql
 ```
 $model->whereSql('title=%s', 'li')
 $model->whereSql('id>%d and id < %d', 6, 9)
 $model->whereSql('title like %s and id < %d', "%li%", 100)
 ```
-## order
+### use criteria
+```
+$criteria = new Criteria();
+$criteria->where('id', 1);
+
+$model->find($criteria);
+```
 
 
 
