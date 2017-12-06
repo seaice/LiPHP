@@ -48,6 +48,7 @@ $model->find($criteria);
 ### relation (support BelongsToRelation)
 ```
 '关系名' => ['当前表列名', 关系, '关联model名', '关联表列名']
+* 关系名，不能同字段名相同！
 ```
 #### 延迟查询方式
 ```
